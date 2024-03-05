@@ -1,4 +1,5 @@
 #include "enviroment.h"
+#include <cstring>
 #include <iostream>
 #include <filesystem>
 

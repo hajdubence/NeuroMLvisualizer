@@ -2,6 +2,7 @@
 #define PARSER_H
 
 #include <map>
+#include <cstring>
 #include "common_structs.h"
 #include "cell_renderer.h"
 #include "pugixml/pugixml.hpp"

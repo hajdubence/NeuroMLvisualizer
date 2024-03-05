@@ -19,7 +19,7 @@ void Parser::readC302Directory(std::map<std::string, CellRenderer*>* componentRe
                 // Print the file name
                 char filepath[100] = "c302\\examples\\cells\\";
                 int originalLength = strlen(filepath);
-                strcat_s(filepath, entry.path().filename().string().c_str());
+                strcat(filepath, entry.path().filename().string().c_str());
 
                 // Check if it ends with "_D.cell.nml"
                 size_t length = strlen(filepath);
