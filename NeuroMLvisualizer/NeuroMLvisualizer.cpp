@@ -11,8 +11,8 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
-#include "parser.h"
 #include "cell_renderer.h"
+#include "enviroment.h"
 
 
 static GLFWwindow* setupGLFW() {
@@ -83,56 +83,34 @@ int main(int argc, char* argv[]) {
 
     CylinderShader* cylinderShader = new CylinderShader();
 
-    // Add 2 predefinied cells
+    // Enviroment
 
-    std::map<std::string, CellRenderer*> componentRendererMap;
+    Enviroment enviroment;
+    std::string simulationFile = "examples/c302_A_Full/LEMS_c302_A_Full.xml";
+    //std::string simulationFile = "examples/c302_C2_FW/LEMS_c302_C2_FW.xml";
+    //std::string simulationFile = "examples/c302_D1_Full/LEMS_c302_D1_Full.xml";
+    enviroment.readFile(simulationFile.c_str());
+
+    std::map<std::string, bool> datFileVisibleMap;
+    for (auto it = enviroment.outputFileCulumns.begin(); it != enviroment.outputFileCulumns.end(); ++it) {
+        std::string datFilename = it->first;
+        datFileVisibleMap[datFilename] = false;
+    }
+
+    int totalFrames = enviroment.outputFiles.begin()->second.size();
+    
+    // Add 2 predefinied cells
 
     glm::vec4 point3DWithDiam_1 = glm::vec4(0, 0, 0, 5);
     Cell generic_neuron_iaf_cell = Cell();
     generic_neuron_iaf_cell.AddSegment(point3DWithDiam_1, point3DWithDiam_1);
-    componentRendererMap["generic_neuron_iaf_cell"] = new CellRenderer(generic_neuron_iaf_cell);
+    generic_neuron_iaf_cell.id = "generic_neuron_iaf_cell";
+    enviroment.cellRenderers["generic_neuron_iaf_cell"] = new CellRenderer(generic_neuron_iaf_cell);
 
-    glm::vec4 point3DWithDiam_2 = glm::vec4(0, 20, 0, 5);
     Cell generic_muscle_iaf_cell = Cell();
-    generic_muscle_iaf_cell.AddSegment(point3DWithDiam_1, point3DWithDiam_2);
-    componentRendererMap["generic_muscle_iaf_cell"] = new CellRenderer(generic_muscle_iaf_cell);
-
-    // Add 2 more predefinied cells
-
-    Cell GenericNeuronCell = Cell();
-    GenericNeuronCell.AddSegment(point3DWithDiam_1, point3DWithDiam_1);
-    componentRendererMap["GenericNeuronCell"] = new CellRenderer(GenericNeuronCell);
-
-    Cell GenericMuscleCell = Cell();
-    GenericMuscleCell.AddSegment(point3DWithDiam_1, point3DWithDiam_2);
-    componentRendererMap["GenericMuscleCell"] = new CellRenderer(GenericMuscleCell);
-
-    // Read the geometery of all cells
-    
-    //Parser::readC302Directory(&componentRendererMap);
-
-    std::cout << componentRendererMap.size() << " morphologies loaded" << std::endl;
-
-    // Read the network.
-    std::string networkFile = "c302_C2_FW.net.nml";
-    //std::string networkFile = "c302_D1_Full.net.nml";
-    std::vector<NetworkCell> displayNeurons = Parser::readNetworkFile(networkFile);
-
-    // Read simulation data.
-    std::string simulationFile = "LEMS_c302_C2_FW.xml";
-    //std::string simulationFile = "LEMS_c302_D1_Full.xml";
-    std::map<std::string, std::map<std::string, int>> ColumnIdMap = Parser::readLemsFile(simulationFile);
-
-    // Read .dat files
-    std::map<std::string, std::vector<std::vector<float>>> MatrixMap;
-    std::map<std::string, bool> datFileVisibleMap;
-    for (auto it = ColumnIdMap.begin(); it != ColumnIdMap.end(); ++it) {
-        std::string datFilename = it->first;
-        MatrixMap[datFilename] = Parser::readDatFile(datFilename);
-        datFileVisibleMap[datFilename] = false;
-    }
-
-    int totalFrames = MatrixMap.begin()->second.size();
+    generic_muscle_iaf_cell.AddSegment(point3DWithDiam_1, point3DWithDiam_1);
+    generic_muscle_iaf_cell.id = "generic_muscle_iaf_cell";
+    enviroment.cellRenderers["generic_muscle_iaf_cell"] = new CellRenderer(generic_muscle_iaf_cell);
 
     // Rendering
 
@@ -201,17 +179,16 @@ int main(int argc, char* argv[]) {
 
         // render cells
 
-        for (NetworkCell neuron: displayNeurons) {
-
+        for (NetworkCell neuron : enviroment.networkCells) {
             cylinderShader->SetObjectColor(glm::vec3(0.5, 0.5, 0.5));
             for (auto it = datFileVisibleMap.begin(); it != datFileVisibleMap.end(); ++it) {
-                if (it->second && ColumnIdMap[it->first].find(neuron.id) != ColumnIdMap[it->first].end()) {
-                    float value = MatrixMap[it->first][frame][ColumnIdMap[it->first][neuron.id]];
+                std::map<std::string, int>& outputFileColumnMap = enviroment.outputFileCulumns[it->first];
+                if (it->second && outputFileColumnMap.find(neuron.id) != outputFileColumnMap.end()) {
+                    float value = enviroment.outputFiles[it->first][frame][outputFileColumnMap[neuron.id]];
                     cylinderShader->SetObjectColor(valueToColor(value));
                 }
             }
-            componentRendererMap[neuron.component]->RenderCell(cylinderShader, glm::translate(model, neuron.position));
-
+            enviroment.cellRenderers[neuron.component]->RenderCell(cylinderShader, glm::translate(model, neuron.position));
         }
 
         ImGui::Render();

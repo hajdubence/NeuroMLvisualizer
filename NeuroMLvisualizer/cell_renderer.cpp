@@ -1,5 +1,4 @@
 #include "cell_renderer.h"
-#include "parser.h"
 #include "pugixml/pugixml.hpp"
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
@@ -8,12 +7,6 @@
 
 
 CellRenderer::CellRenderer() {
-
-}
-
-CellRenderer::CellRenderer(const char* path) {
-    
-    ParseMorphology(path);
 
 }
 
@@ -89,20 +82,4 @@ void CellRenderer::RenderCell(CylinderShader* cylinderShader, glm::mat4 modelMat
         cylinder.RenderModel();
         cylinderShader->DisableShader();
     }
-}
-
-
-
-void CellRenderer::ParseMorphology(const char* path) {
-
-    pugi::xml_document doc;
-
-    if (!doc.load_file(path)) {
-        std::cerr << "Failed to load file" << std::endl;
-    }
-
-    pugi::xml_node cellNode = doc.select_node("//cell").node();
-
-    cellData = Parser::readCell(cellNode);
-    
 }

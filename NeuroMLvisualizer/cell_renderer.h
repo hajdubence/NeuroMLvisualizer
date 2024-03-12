@@ -13,7 +13,6 @@ class CellRenderer
 public:
 
     CellRenderer();
-    CellRenderer(const char* path);
     CellRenderer(Cell cell);
     ~CellRenderer();
 
@@ -24,8 +23,6 @@ private:
     ModelRenderer cylinder = ModelRenderer("cylinder3.obj");
     ModelRenderer sphere = ModelRenderer("sphere.obj");
     Cell cellData;
-
-    void ParseMorphology(const char* path);
     
 };
 
