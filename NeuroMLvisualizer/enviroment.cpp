@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <fstream>
 #include <sstream>
+#include <thread>
+
 
 namespace fs = std::filesystem;
 
@@ -65,29 +67,38 @@ void Enviroment::parseSimulationNode(pugi::xml_node simulationNode, const char* 
 
 void Enviroment::readOutputFiles(const char* path) {
     fs::path dirPath = fs::path(path).parent_path();
+    std::vector<std::thread> threads;
     for (auto it = outputFileCulumns.begin(); it != outputFileCulumns.end(); ++it) {
         std::string fileName = it->first;
-        std::vector<std::vector<float>> matrix;
-        std::ifstream file((dirPath / fileName).string().c_str());
-        if (!file.is_open()) {
-            std::cerr << "Error opening file: " << fileName << std::endl;
-        }
-        std::cout << "Parsing file: " << fileName << std::endl;
-        std::string line;
-        while (std::getline(file, line)) {
-            std::vector<float> row;
-            std::istringstream iss(line);
-            float value;
-            while (iss >> value) {
-                row.push_back(value);
-            }
-            matrix.push_back(row);
-        }
-        outputFiles[fileName] = matrix;
-        file.close();
+        std::string pathToFile = (dirPath / fileName).string();
+        threads.emplace_back([pathToFile, fileName, this]() { readOutputFile(pathToFile, fileName); });
+    }
+    for (std::thread& t : threads) {
+        t.join();
     }
 }
 
+void Enviroment::readOutputFile(std::string path, std::string fileName) {
+    std::vector<std::vector<float>> matrix;
+    std::ifstream file(path.c_str());
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << fileName << std::endl;
+    }
+    std::cout << "Parsing file: " << fileName << std::endl;
+    std::string line;
+    while (std::getline(file, line)) {
+        std::vector<float> row;
+        std::istringstream iss(line);
+        float value;
+        while (iss >> value) {
+            row.push_back(value);
+        }
+        matrix.push_back(row);
+    }
+    file.close();
+    std::lock_guard<std::mutex> lock(outputFilesMutex);
+    outputFiles[fileName] = matrix;
+}
 
 
 void Enviroment::parseNeuromlNode(pugi::xml_node neuromlNode, const char* path) {
@@ -95,12 +106,16 @@ void Enviroment::parseNeuromlNode(pugi::xml_node neuromlNode, const char* path) 
         if (!strcmp(child.name(), "include")) {
             parseIncludeNode(child, path);
         }
+        if (!strcmp(child.name(), "iafCell")) {
+            parseIafCellNode(child);
+        }
         if (!strcmp(child.name(), "cell")) {
             parseCellNode(child);
         }
         if (!strcmp(child.name(), "network")) {
             parseNetworkNode(child);
         }
+
     }
 }
 
@@ -108,6 +123,14 @@ void Enviroment::parseIncludeNode(pugi::xml_node includeNode, const char* path) 
     std::string href = includeNode.attribute("href").as_string();
     fs::path dirPath = fs::path(path).parent_path();
     readFile((dirPath / href).string().c_str());
+}
+
+void Enviroment::parseIafCellNode(pugi::xml_node iafCellNode) {
+    Cell cell = Cell();
+    cell.id = iafCellNode.attribute("id").as_string();
+    glm::vec4 point3DWithDiam_1 = glm::vec4(0, 0, 0, 2);
+    cell.AddSegment(point3DWithDiam_1, point3DWithDiam_1);
+    cellRenderers[cell.id] = new CellRenderer(cell);
 }
 
 void Enviroment::parseCellNode(pugi::xml_node cellNode) {

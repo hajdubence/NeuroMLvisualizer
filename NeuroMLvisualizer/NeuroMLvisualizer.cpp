@@ -86,8 +86,8 @@ int main(int argc, char* argv[]) {
     // Enviroment
 
     Enviroment enviroment;
-    std::string simulationFile = "examples/c302_A_Full/LEMS_c302_A_Full.xml";
-    //std::string simulationFile = "examples/c302_C2_FW/LEMS_c302_C2_FW.xml";
+    //std::string simulationFile = "examples/c302_A_Full/LEMS_c302_A_Full.xml";
+    std::string simulationFile = "examples/c302_C2_FW/LEMS_c302_C2_FW.xml";
     //std::string simulationFile = "examples/c302_D1_Full/LEMS_c302_D1_Full.xml";
     enviroment.readFile(simulationFile.c_str());
 
@@ -98,27 +98,14 @@ int main(int argc, char* argv[]) {
     }
 
     int totalFrames = enviroment.outputFiles.begin()->second.size();
-    
-    // Add 2 predefinied cells
-
-    glm::vec4 point3DWithDiam_1 = glm::vec4(0, 0, 0, 5);
-    Cell generic_neuron_iaf_cell = Cell();
-    generic_neuron_iaf_cell.AddSegment(point3DWithDiam_1, point3DWithDiam_1);
-    generic_neuron_iaf_cell.id = "generic_neuron_iaf_cell";
-    enviroment.cellRenderers["generic_neuron_iaf_cell"] = new CellRenderer(generic_neuron_iaf_cell);
-
-    Cell generic_muscle_iaf_cell = Cell();
-    generic_muscle_iaf_cell.AddSegment(point3DWithDiam_1, point3DWithDiam_1);
-    generic_muscle_iaf_cell.id = "generic_muscle_iaf_cell";
-    enviroment.cellRenderers["generic_muscle_iaf_cell"] = new CellRenderer(generic_muscle_iaf_cell);
 
     // Rendering
 
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
-        static int frame = -1;
-        static bool playing = true;
+        static int frame = 0;
+        static bool playing = false;
         if (playing)
         {
             frame = frame + 5;
