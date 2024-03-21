@@ -12,7 +12,7 @@ class Enviroment {
 
 public:
 
-	std::map<std::string, CellRenderer*> cellRenderers;
+	std::map<std::string, InstancedCellRenderer*> cellRenderers;
 	std::vector<NetworkCell> networkCells;
 	std::map<std::string, std::map<std::string, int>> outputFileCulumns;
 	std::map<std::string, std::vector<std::vector<float>>> outputFiles;

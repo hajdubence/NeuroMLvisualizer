@@ -171,12 +171,6 @@
     <ClInclude Include="pugixml\pugixml.hpp" />
     <ClInclude Include="shader.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="cylinder.fs" />
-    <None Include="cylinder.vs" />
-    <None Include="triangle.fs" />
-    <None Include="triangle.vs" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

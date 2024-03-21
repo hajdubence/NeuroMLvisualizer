@@ -1,7 +1,7 @@
 #include "shader.h"
 
 
-CylinderShader::CylinderShader() : Shader{ "cylinder.vs", "cylinder.fs" }
+CylinderShader::CylinderShader(const char* vertex_file_path, const char* fragment_file_path) : Shader{ vertex_file_path, fragment_file_path }
 {
     uniform_topScale = GetUniform("topScale");
     uniform_bottomScale = GetUniform("bottomScale");

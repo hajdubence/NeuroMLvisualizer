@@ -18,12 +18,29 @@ public:
 
     void RenderCell(CylinderShader* cylinderShader, glm::mat4 modelMatrix);
 
+protected:
+
+    Cell cellData;
+
+    static ModelRenderer& getSphere();
+    static ModelRenderer& getCylinder();
+
+};
+
+class InstancedCellRenderer : public CellRenderer
+{
+public:
+
+    InstancedCellRenderer(Cell cell);
+    ~InstancedCellRenderer();
+
+    void RenderCell(CylinderShader* cylinderShader, glm::mat4 modelMatrix);
+
 private:
 
-    ModelRenderer cylinder = ModelRenderer("cylinder3.obj");
-    ModelRenderer sphere = ModelRenderer("sphere.obj");
-    Cell cellData;
-    
+    InstancedModelRenderer sphere = InstancedModelRenderer(getSphere());
+    InstancedModelRenderer cylinder = InstancedModelRenderer(getCylinder());
+
 };
 
 

@@ -81,14 +81,16 @@ int main(int argc, char* argv[]) {
 
     // Shader
 
-    CylinderShader* cylinderShader = new CylinderShader();
+    CylinderShader* cylinderShader = new CylinderShader("cylinder_instanced.vs", "cylinder.fs");
 
+    
+    
     // Enviroment
 
     Enviroment enviroment;
     //std::string simulationFile = "examples/c302_A_Full/LEMS_c302_A_Full.xml";
-    std::string simulationFile = "examples/c302_C2_FW/LEMS_c302_C2_FW.xml";
-    //std::string simulationFile = "examples/c302_D1_Full/LEMS_c302_D1_Full.xml";
+    //std::string simulationFile = "examples/c302_C2_FW/LEMS_c302_C2_FW.xml";
+    std::string simulationFile = "examples/c302_D1_Full/LEMS_c302_D1_Full.xml";
     enviroment.readFile(simulationFile.c_str());
 
     std::map<std::string, bool> datFileVisibleMap;
@@ -99,11 +101,16 @@ int main(int argc, char* argv[]) {
 
     int totalFrames = enviroment.outputFiles.begin()->second.size();
 
+
+
     // Rendering
 
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
+
+
+        
         static int frame = 0;
         static bool playing = false;
         if (playing)

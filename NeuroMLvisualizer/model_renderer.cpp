@@ -58,7 +58,6 @@ ModelRenderer::~ModelRenderer()
     glDeleteVertexArrays(1, &modelVAO);
 }
 
-
 void ModelRenderer::RenderModel()
 {
     glBindVertexArray(modelVAO);
@@ -67,8 +66,6 @@ void ModelRenderer::RenderModel()
 
     glBindVertexArray(0);
 }
-
-
 
 bool ModelRenderer::loadAssImp(
     const char * path, 
@@ -121,4 +118,125 @@ bool ModelRenderer::loadAssImp(
     
     // The "scene" pointer will be deleted automatically by "importer"
     return true;
+}
+
+
+
+InstancedModelRenderer::InstancedModelRenderer(ModelRenderer& modelRenderer)
+{
+    instanceCount = 0;
+    modelIndexCount = modelRenderer.modelIndexCount;
+
+    //VAO
+    glGenVertexArrays(1, &modelVAO);
+    glBindVertexArray(modelVAO);
+
+    // indecies
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, modelRenderer.indexbuffer);
+
+    // 1rst attribute buffer : positions
+    glBindBuffer(GL_ARRAY_BUFFER, modelRenderer.vertexbuffer);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+    // 2nd attribute buffer : normals
+    glBindBuffer(GL_ARRAY_BUFFER, modelRenderer.normalbuffer);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+    // 3rd attribute buffer : topScale (per instance)
+    glGenBuffers(1, &instanceTopScaleBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, instanceTopScaleBuffer);
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glVertexAttribDivisor(2, 1);
+
+    // 4th attribute buffer : bottomScale (per instance)
+    glGenBuffers(1, &instanceBottomScaleBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, instanceBottomScaleBuffer);
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glVertexAttribDivisor(3, 1);
+
+    // 5th attribute buffer : model matrices (per instance)
+    glGenBuffers(1, &instanceMatrixBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, instanceMatrixBuffer);
+
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+    glVertexAttribDivisor(4, 1);
+
+    glEnableVertexAttribArray(5);
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
+    glVertexAttribDivisor(5, 1);
+
+    glEnableVertexAttribArray(6);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+    glVertexAttribDivisor(6, 1);
+
+    glEnableVertexAttribArray(7);
+    glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+    glVertexAttribDivisor(7, 1);
+    
+
+    glBindVertexArray(0);
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(3);
+    glDisableVertexAttribArray(4);
+    glDisableVertexAttribArray(5);
+    glDisableVertexAttribArray(6);
+    glDisableVertexAttribArray(7);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+InstancedModelRenderer::~InstancedModelRenderer()
+{
+    glDeleteVertexArrays(1, &modelVAO);
+}
+
+void InstancedModelRenderer::RenderModel()
+{
+    glBindVertexArray(modelVAO);
+
+    glDrawElementsInstanced(GL_TRIANGLES, modelIndexCount, GL_UNSIGNED_SHORT, 0, instanceCount);
+
+    glBindVertexArray(0);
+}
+
+void InstancedModelRenderer::setTopScales(float* topScales, int count)
+{
+    glBindVertexArray(modelVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, instanceTopScaleBuffer);
+    glBufferData(GL_ARRAY_BUFFER, count * sizeof(float), &topScales[0], GL_STATIC_DRAW);
+    instanceCount = count;
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+void InstancedModelRenderer::setBottomScales(float* bottomScales, int count)
+{
+    glBindVertexArray(modelVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, instanceBottomScaleBuffer);
+    glBufferData(GL_ARRAY_BUFFER, count * sizeof(float), &bottomScales[0], GL_STATIC_DRAW);
+    instanceCount = count;
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void InstancedModelRenderer::setModelMatreces(glm::mat4* modelMatrices, int count)
+{
+    glBindVertexArray(modelVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, instanceMatrixBuffer);
+    glBufferData(GL_ARRAY_BUFFER, count * sizeof(glm::mat4), &modelMatrices[0], GL_STATIC_DRAW);
+    instanceCount = count;
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

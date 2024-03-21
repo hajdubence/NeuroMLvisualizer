@@ -130,7 +130,7 @@ void Enviroment::parseIafCellNode(pugi::xml_node iafCellNode) {
     cell.id = iafCellNode.attribute("id").as_string();
     glm::vec4 point3DWithDiam_1 = glm::vec4(0, 0, 0, 2);
     cell.AddSegment(point3DWithDiam_1, point3DWithDiam_1);
-    cellRenderers[cell.id] = new CellRenderer(cell);
+    cellRenderers[cell.id] = new InstancedCellRenderer(cell);
 }
 
 void Enviroment::parseCellNode(pugi::xml_node cellNode) {
@@ -174,7 +174,7 @@ void Enviroment::parseCellNode(pugi::xml_node cellNode) {
         }
     }
     
-    cellRenderers[cell.id] = new CellRenderer(cell);
+    cellRenderers[cell.id] = new InstancedCellRenderer(cell);
 }
 
 void Enviroment::parseNetworkNode(pugi::xml_node networkNode) {

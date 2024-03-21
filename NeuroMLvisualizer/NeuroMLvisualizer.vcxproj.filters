@@ -123,18 +123,4 @@
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="triangle.fs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="triangle.vs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="cylinder.fs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="cylinder.vs">
-      <Filter>Source Files</Filter>
-    </None>
-  </ItemGroup>
 </Project>

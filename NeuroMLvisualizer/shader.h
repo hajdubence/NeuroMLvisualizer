@@ -47,7 +47,7 @@ class CylinderShader : public Shader
 {
 public:
 
-    CylinderShader();
+    CylinderShader(const char* vertex_file_path, const char* fragment_file_path);
     ~CylinderShader();
 
     void SetTopScale(float topScale);
