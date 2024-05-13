@@ -6,7 +6,7 @@ in vec3 fPosition;
 in vec3 fNormal;
 
 uniform vec3 lightPosition;
-uniform vec3 viewPos;
+uniform vec3 viewPosition;
 uniform vec3 objectColor;
 
 void main() {
@@ -18,11 +18,10 @@ void main() {
 
     vec3 norm = normalize(fNormal);
     vec3 lightDir = normalize(lightPosition - fPosition);
-    //float lightDistance = length(lightPosition - fPosition);
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = lightDiffuse * diff * objectColor;
 
-    vec3 viewDir = normalize(viewPos - fPosition);
+    vec3 viewDir = normalize(viewPosition - fPosition);
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     if (diff == 0.0)

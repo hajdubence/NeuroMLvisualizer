@@ -59,7 +59,6 @@ void Enviroment::parseSimulationNode(pugi::xml_node simulationNode, const char* 
                 outputFileCulumns[fileName][id] = i;
                 i++;
             }
-            std::cout << "OutputFile: " << fileName << " should contain " << outputFileCulumns[fileName].size() << " columns" << std::endl;
         }
     }
     readOutputFiles(path);
@@ -90,6 +89,7 @@ void Enviroment::readOutputFile(std::string path, std::string fileName) {
         std::vector<float> row;
         std::istringstream iss(line);
         float value;
+        iss >> value; // igrore first column
         while (iss >> value) {
             row.push_back(value);
         }

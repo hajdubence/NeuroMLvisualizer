@@ -27,22 +27,6 @@ private:
 
 
 
-class TriangleShader : public Shader
-{
-public:
-
-    TriangleShader();
-    ~TriangleShader();
-
-    void SetMVP(glm::mat4 MVP);
-    void SetColor(glm::vec3 color);
-
-private:
-
-    GLuint uniform_MVP;
-    GLuint uniform_color;
-};
-
 class CylinderShader : public Shader
 {
 public:
@@ -56,8 +40,8 @@ public:
     void SetView(glm::mat4 view);
     void SetProjection(glm::mat4 projection);
 
-    void SetLightPosition(glm::vec3 color);
-    void SetViewPos(glm::vec3 color);
+    void SetLightPosition(glm::vec3 position);
+    void SetViewPosition(glm::vec3 position);
     void SetObjectColor(glm::vec3 color);
 
 private:
@@ -69,7 +53,7 @@ private:
     GLuint uniform_projection;
 
     GLuint uniform_lightPosition;
-    GLuint uniform_viewPos;
+    GLuint uniform_viewPosition;
     GLuint uniform_objectColor;
 };
 

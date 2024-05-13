@@ -3,14 +3,14 @@
 
 CylinderShader::CylinderShader(const char* vertex_file_path, const char* fragment_file_path) : Shader{ vertex_file_path, fragment_file_path }
 {
-    uniform_topScale = GetUniform("topScale");
-    uniform_bottomScale = GetUniform("bottomScale");
-    uniform_model = GetUniform("model");
+    uniform_topScale = GetUniform("uniformTopScale");
+    uniform_bottomScale = GetUniform("uniformBottomScale");
+    uniform_model = GetUniform("uniformModel");
     uniform_view = GetUniform("view");
     uniform_projection = GetUniform("projection");
 
     uniform_lightPosition = GetUniform("lightPosition");
-    uniform_viewPos = GetUniform("viewPos");
+    uniform_viewPosition = GetUniform("viewPosition");
     uniform_objectColor = GetUniform("objectColor");
 }
 
@@ -52,17 +52,17 @@ void CylinderShader::SetProjection(glm::mat4 projection)
     DisableShader();
 }
 
-void CylinderShader::SetLightPosition(glm::vec3 color)
+void CylinderShader::SetLightPosition(glm::vec3 position)
 {
     EnableShader();
-    glUniform3fv(uniform_lightPosition, 1, &color[0]);
+    glUniform3fv(uniform_lightPosition, 1, &position[0]);
     DisableShader();
 }
 
-void CylinderShader::SetViewPos(glm::vec3 color)
+void CylinderShader::SetViewPosition(glm::vec3 position)
 {
     EnableShader();
-    glUniform3fv(uniform_viewPos, 1, &color[0]);
+    glUniform3fv(uniform_viewPosition, 1, &position[0]);
     DisableShader();
 }
 

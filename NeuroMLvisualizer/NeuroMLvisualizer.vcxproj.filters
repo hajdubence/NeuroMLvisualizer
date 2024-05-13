@@ -30,9 +30,6 @@
     <ClCompile Include="shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="shader_triangle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="pugixml\pugixml.cpp">
       <Filter>Source Files\pugixml</Filter>
     </ClCompile>
@@ -42,7 +39,7 @@
     <ClCompile Include="shader_cylinder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cell_renderer.cpp">
+    <ClCompile Include="instanced_cell_renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
@@ -86,7 +83,7 @@
     <ClInclude Include="model_renderer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="cell_renderer.h">
+    <ClInclude Include="instanced_cell_renderer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imconfig.h">
@@ -122,5 +119,8 @@
     <ClInclude Include="enviroment.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

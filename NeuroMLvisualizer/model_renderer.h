@@ -11,10 +11,7 @@ class ModelRenderer
 {
 public:
 
-    int modelIndexCount;
-    GLuint indexbuffer;
-    GLuint vertexbuffer;
-    GLuint normalbuffer;
+    friend class InstancedModelRenderer;
 
     ModelRenderer(const char* path);
     ~ModelRenderer();
@@ -23,8 +20,12 @@ public:
 private:
 
     GLuint modelVAO;
+    int modelIndexCount;
+    GLuint indexbuffer;
+    GLuint vertexbuffer;
+    GLuint normalbuffer;
 
-    bool loadAssImp(
+    bool loadAssimp(
         const char* path,
         std::vector<unsigned short>& indices,
         std::vector<glm::vec3>& vertices,

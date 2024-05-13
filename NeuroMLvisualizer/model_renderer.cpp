@@ -21,7 +21,7 @@ ModelRenderer::ModelRenderer(const char* path)
     std::vector<glm::vec3> positions;
     std::vector<glm::vec2> uvs; //Discard uvs.
     std::vector<glm::vec3> normals;
-    bool res2 = loadAssImp(path, indices, positions, uvs, normals);
+    bool res2 = loadAssimp(path, indices, positions, uvs, normals);
     modelIndexCount = indices.size();
 
     // indecies
@@ -29,14 +29,14 @@ ModelRenderer::ModelRenderer(const char* path)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned short), &indices[0], GL_STATIC_DRAW);
 
-    // 1rst attribute buffer : positions
+    // attribute 0: positions
     glGenBuffers(1, &vertexbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
     glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(glm::vec3), &positions[0], GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-    // 2nd attribute buffer : normals
+    // attribute 1: normals
     glGenBuffers(1, &normalbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
     glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
@@ -44,8 +44,6 @@ ModelRenderer::ModelRenderer(const char* path)
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
     glBindVertexArray(0);
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
@@ -67,7 +65,7 @@ void ModelRenderer::RenderModel()
     glBindVertexArray(0);
 }
 
-bool ModelRenderer::loadAssImp(
+bool ModelRenderer::loadAssimp(
     const char * path, 
     std::vector<unsigned short> & indices,
     std::vector<glm::vec3> & vertices,
@@ -134,31 +132,31 @@ InstancedModelRenderer::InstancedModelRenderer(ModelRenderer& modelRenderer)
     // indecies
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, modelRenderer.indexbuffer);
 
-    // 1rst attribute buffer : positions
+    // attribute 0: positions
     glBindBuffer(GL_ARRAY_BUFFER, modelRenderer.vertexbuffer);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-    // 2nd attribute buffer : normals
+    // attribute 1: normals
     glBindBuffer(GL_ARRAY_BUFFER, modelRenderer.normalbuffer);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-    // 3rd attribute buffer : topScale (per instance)
+    // attribute 2: topScale (per instance)
     glGenBuffers(1, &instanceTopScaleBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, instanceTopScaleBuffer);
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glVertexAttribDivisor(2, 1);
 
-    // 4th attribute buffer : bottomScale (per instance)
+    // attribute 3: bottomScale (per instance)
     glGenBuffers(1, &instanceBottomScaleBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, instanceBottomScaleBuffer);
     glEnableVertexAttribArray(3);
     glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glVertexAttribDivisor(3, 1);
 
-    // 5th attribute buffer : model matrices (per instance)
+    // attribute 4-7: model matrices (per instance)
     glGenBuffers(1, &instanceMatrixBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, instanceMatrixBuffer);
 
@@ -177,23 +175,17 @@ InstancedModelRenderer::InstancedModelRenderer(ModelRenderer& modelRenderer)
     glEnableVertexAttribArray(7);
     glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
     glVertexAttribDivisor(7, 1);
-    
 
     glBindVertexArray(0);
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(2);
-    glDisableVertexAttribArray(3);
-    glDisableVertexAttribArray(4);
-    glDisableVertexAttribArray(5);
-    glDisableVertexAttribArray(6);
-    glDisableVertexAttribArray(7);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 InstancedModelRenderer::~InstancedModelRenderer()
 {
+    glDeleteBuffers(1, &instanceTopScaleBuffer);
+    glDeleteBuffers(1, &instanceBottomScaleBuffer);
+    glDeleteBuffers(1, &instanceMatrixBuffer);
     glDeleteVertexArrays(1, &modelVAO);
 }
 

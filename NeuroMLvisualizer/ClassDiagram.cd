@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Camera">
+    <Position X="5.75" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>gAEGDAwASAEACAAAAgAAIAgCADAAQAgABCAAIEACAIA=</HashCode>
+      <FileName>camera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Enviroment">
+    <Position X="17.25" Y="1.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAgAAABAACAAAAAgICAAUABCAAAAASAAAAgAAAAQAgA=</HashCode>
+      <FileName>enviroment.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InstancedCellRenderer">
+    <Position X="13.5" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAgAQABAAABAAAEAAAAAAgBAAAAAAAAAAAAAA=</HashCode>
+      <FileName>instanced_cell_renderer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ModelRenderer">
+    <Position X="12.5" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAgAAAAgAAABACAAACAACAAgAAEAA=</HashCode>
+      <FileName>model_renderer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InstancedModelRenderer">
+    <Position X="14.5" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABCAAAAEAAgAAAQgAAAiFAAEAAAAAAAgAAAAA=</HashCode>
+      <FileName>model_renderer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Shader">
+    <Position X="8" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wAAAEAAAAAAAIACAAAAAAAAAAAAAAAAABAAAAAAAAQA=</HashCode>
+      <FileName>shader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CylinderShader">
+    <Position X="8" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>gAAAABAQCAAAIIAEAABAAAAQAIEQBAAwAAAAAABAAAA=</HashCode>
+      <FileName>shader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Cell">
+    <Position X="10.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAMAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>common_structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="NetworkCell">
+    <Position X="10.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAICAAAAAAAAAAAAAAAAAAQgA=</HashCode>
+      <FileName>common_structs.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
